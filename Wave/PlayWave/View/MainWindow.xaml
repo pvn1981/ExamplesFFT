@@ -1,0 +1,107 @@
+﻿<Window x:Class="PlayWave.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PlayWave"
+        xmlns:viewmodel="clr-namespace:PlayWave.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="300" Width="650">
+
+    <Window.Resources>
+        <viewmodel:DataViewModel x:Key="DataViewModel"/>
+    </Window.Resources>
+
+    <Grid Margin="5"
+        DataContext="{Binding Source={StaticResource DataViewModel}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="90"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" 
+                       VerticalAlignment="Center"
+                       d:Text="dog_bark.wav" 
+                       Text ="{Binding WaveFilePath}"/>
+
+            <Button Grid.Column="1" 
+                    HorizontalAlignment="Right"
+                    Content="Выбрать wav" 
+                    Command="{Binding OpenCommand}"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+            <TextBox d:TextWrapping="Wrap" d:Text=" 52 49 46 46 8C 64 01 00 &#x0d;&#x0a;
+57 41 56 45 66 6D 74 20 &#x0d;&#x0a;
+10 00 00 00 01 00 01 00 &#x0d;&#x0a;
+F1 56 00 00 F1 56 00 00 &#x0d;&#x0a;
+01 00 08 00 64 61 74 61 &#x0d;&#x0a;
+68 64 01 00 "
+                     Text="{Binding WaveDate}"/>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel VerticalAlignment="Center">
+                    <RadioButton IsChecked="{Binding IsOneChannel, Mode=TwoWay}">1 канал</RadioButton>
+                    <RadioButton IsChecked="{Binding IsTwoChannel, Mode=TwoWay}">2 канал</RadioButton>
+                </StackPanel>
+
+                <Label Margin="5"
+                       Content="{Binding SliderGainPositionValue}"></Label>
+
+                <Slider  Margin="5"
+                         VerticalAlignment="Center" 
+                         Value="{Binding SliderGainPosition, Mode=TwoWay}" 
+                         Minimum="0" 
+                         Maximum="1" 
+                         Width="200"/>
+
+                <ComboBox Margin="5"
+                          VerticalAlignment="Center"
+                          Width="80"
+                          SelectedValue="{Binding ChoosedSampleFreq, Mode=TwoWay}"
+                          ItemsSource="{Binding SampleFreqList}">
+                </ComboBox>
+
+                <Button Margin="5"
+                        Content="Generate" 
+                        Command="{Binding GenerateCommand}" 
+                        VerticalAlignment="Center" 
+                        Width="75" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Play" Command="{Binding PlayCommand}" IsEnabled="{Binding IsStopped}" VerticalAlignment="Center" Width="75" />
+                <Button Content="Pause" Command="{Binding PauseCommand}" IsEnabled="{Binding IsPaused}" VerticalAlignment="Center" Width="75" />
+                <Button Content="Stop" Command="{Binding StopCommand}" IsEnabled="{Binding IsPlaying}" VerticalAlignment="Center" Width="75" />
+
+                <Slider VerticalAlignment="Center" Value="{Binding SliderPosition, Mode=TwoWay}" Maximum="10" Width="400" />
+                <TextBlock Text="{Binding SongName, FallbackValue=Test}" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+
+        <DockPanel Grid.Row="4">
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBarItem>
+                    <TextBlock Text="{Binding StatusBarText}"/>
+                </StatusBarItem>
+            </StatusBar>
+        </DockPanel>
+    </Grid>
+</Window>
